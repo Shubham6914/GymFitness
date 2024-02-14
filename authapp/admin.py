@@ -1,5 +1,5 @@
 from django.contrib import admin
-from authapp.models import contact,MembershipPlan,Enrollment,Trainer
+from authapp.models import contact,MembershipPlan,Enrollment,Trainer,Gallery,Attendance
 # Register your models here.
 
 @admin.register(contact)
@@ -25,3 +25,16 @@ class AdminMembership(admin.ModelAdmin):
    
 class AdminTrainer(admin.ModelAdmin):
    list_display = ['id','name','phone','gender','salary','time_stamp']
+   
+   
+   
+@admin.register(Gallery)
+class AdminGallery(admin.ModelAdmin):
+   list_display = ['id','title','image','time_stamp']
+   
+   
+   
+@admin.register(Attendance)
+
+class AdminAttendance(admin.ModelAdmin):
+   list_display = ['id','email_address','select_date','login','logout','trained_by','select_workout']

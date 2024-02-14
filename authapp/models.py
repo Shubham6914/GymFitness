@@ -51,3 +51,25 @@ class MembershipPlan(models.Model):
    def __int__(self):
       return self.id
    
+   
+class Gallery(models.Model):
+   title = models.CharField(max_length=30)
+   image = models.ImageField(upload_to="gallery")
+   time_stamp = models.DateTimeField(auto_now_add=True,blank=True)
+   
+   def __int__(self):
+      return self.id
+   
+   
+class Attendance(models.Model):
+   email_address = models.EmailField()
+   select_date = models.DateTimeField(auto_now_add=True)
+   login = models.CharField(max_length=40)
+   logout = models.CharField(max_length = 40)
+   trained_by = models.CharField(max_length=40)
+   select_workout = models.CharField(max_length=40)
+   
+   def __int__(self):
+      return self.id
+   
+   

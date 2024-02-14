@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # iam using django built in authentication User model that's why here i have import these inbuilt functionality
 # of authenticate function, login and logout 
 from django.contrib.auth import authenticate,login,logout
-from authapp.models import contact,MembershipPlan,Trainer,Enrollment
+from authapp.models import contact,MembershipPlan,Trainer,Enrollment,Gallery,Attendance
 # Create your views here.
 
 def Home(request):
@@ -20,9 +20,11 @@ def View_Profile(request):
    else:
       user_email = request.user
       print(user_email)
-      posts = Enrollment.objects.filter(email=user_email)
+      posts = Enrollment.objects.filter(email=user_email) #filtering current user  for enroll 
+      attendance = Attendance.objects.filter(email_address=user_email) # filtering current user for attendance 
       context={
          "posts":posts,
+         "attendance" : attendance,
       }
       print(posts)
    return render(request, "profile.html",context)
@@ -130,3 +132,38 @@ def Enroll(request):
       # Render the enroll page with context data
    return render(request=request, template_name="enroll.html",context=context)
 
+def gallery(request):
+   posts = Gallery.objects.all()
+   context = {"posts":posts}
+   return render(request, "gallery.html",context)
+
+
+def User_Attendance(request):
+   if not request.user.is_authenticated:
+      messages.warning(request, "Please Login and Try Again")
+      return redirect('login')
+   # If the user is authenticated, proceed with enrollment logic
+   else:
+      SelectTrainer = Trainer.objects.all()
+      # username = request.user
+      # print(username)
+      context = {
+         "SelectTrainer" : SelectTrainer,
+      }
+      if request.method == "POST":
+         username = request.POST.get('email')
+         select_workout = request.POST.get('workout')
+         login = request.POST.get('loginTime')
+         logout = request.POST.get('logoutTime')
+         trained_by = request.POST.get('select_trainer')
+         query = Attendance(email_address=username,login=login,logout=logout,select_workout=select_workout,trained_by=trained_by)
+         query.save()
+         messages.info(request, "Attendance applied successfully..!")
+         return redirect("attendance")
+   return render(request , "attendance.html",context)
+
+
+
+
+def About(request):
+   return render(request, "about.html")

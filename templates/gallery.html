@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Gallery
+{% endblock title %}
+
+{% block head %}
+
+   <center>
+  <p class="text-center text-white">
+    <h2>To see gallery images of gym, swipe below to access the dashboard. Explore our collection seamlessly.</h2>
+  </p>
+</center>
+
+{% endblock head %}
+
+
+{% block body  %}
+
+<div class="container mt-2">
+   <center><h1>Gallery</h1></center>
+   <div class="row">
+         {% for post in posts  %}
+            <div class="col-md-4">
+               <div class="card">
+                  <img src="{{post.image.url}}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                  <h5 class="card-title">{{post.title}}</h5>
+                  <p class="card-text">Uploaded On :{{post.time_stamp}} </p>
+                  </div>
+               </div>
+            </div>
+         {% endfor %}
+   </div>
+
+</div>
+
+
+{% endblock body  %}  

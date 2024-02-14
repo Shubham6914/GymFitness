@@ -1,7 +1,5 @@
 from django.urls import path,include
 from authapp import views
-from django.conf import settings
-from django.conf.urls.static import static
 urlpatterns = [
   path('',views.Home, name="home"),
   path('signup/', views.Signup, name='signup'),
@@ -10,4 +8,7 @@ urlpatterns = [
   path('contact/', views.Contact, name='contact'),
   path('enroll/', views.Enroll, name='enroll'),
   path('profile/', view=views.View_Profile, name='profile'),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+  path('gallery/', view=views.gallery, name='gallery'),
+  path('attendance/', view=views.User_Attendance, name='attendance'),
+  path('about/', view=views.About, name='about'),
+]
