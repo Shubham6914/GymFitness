@@ -6,14 +6,26 @@ from django.contrib.auth.models import User
 # iam using django built in authentication User model that's why here i have import these inbuilt functionality
 # of authenticate function, login and logout 
 from django.contrib.auth import authenticate,login,logout
-
-
+from authapp.models import contact,MembershipPlan,Trainer,Enrollment
 # Create your views here.
 
 def Home(request):
    return render(request, "index.html")
 
 
+def View_Profile(request):
+   if not request.user.is_authenticated:
+      messages.warning(request, "Please Login and Try Again")
+      return redirect('login')
+   else:
+      user_email = request.user
+      print(user_email)
+      posts = Enrollment.objects.filter(email=user_email)
+      context={
+         "posts":posts,
+      }
+      print(posts)
+   return render(request, "profile.html",context)
 
 def Signup(request):
    if request.method == "POST":
@@ -53,8 +65,8 @@ def Login(request):
       myuser = authenticate(username=username,password=password1)
       if myuser is not None:
          login(request,myuser)
-         messages.success(request, "Login Successfully")
          return redirect("home")
+         messages.success(request, "Login Successfully")
       else:
          messages.error(request, "Invalid Credentials") 
          return redirect("login") 
@@ -65,3 +77,56 @@ def Logout(request):
    logout(request)
    messages.success(request,"Logout Successfully")
    return redirect("login")
+
+
+def Contact(request):
+   if request.method =="POST":
+      name = request.POST.get('full_name')
+      email = request.POST.get('email')
+      phone_number = request.POST.get('phonenumber')
+      desc = request.POST.get('desc')
+      myquery = contact(name=name,email=email,phonenumber=phone_number,description=desc)
+      myquery.save()
+      messages.success(request, "Thanks for Contacting us we will get you back soon")
+      return redirect("contact")
+      
+   return render(request, "contact.html")
+
+def Enroll(request):
+   if not request.user.is_authenticated:
+      messages.warning(request, "Please Login and Try Again")
+      return redirect('login')
+   # If the user is authenticated, proceed with enrollment logic
+   else:
+      
+      Membership = MembershipPlan.objects.all()
+      SelectTrainer = Trainer.objects.all()
+      context = {
+         "Mebership": Membership,
+         "SelectTrainer" : SelectTrainer,
+      }
+      if request.method == "POST":
+         # Handle POST request to enroll
+         # Extract data from the POST request
+         username = request.POST.get('fullName')
+         email = request.POST.get('email')
+         gender = request.POST.get('gender')
+         mobile = request.POST.get('phonenumber')
+         date_of_birth = request.POST.get('DOB')
+         membership = request.POST.get('select_mebership_plan')
+         trainer = request.POST.get('select_trainer')
+         reference = request.POST.get('reference')
+         address = request.POST.get('address')
+         # Create an Enrollment instance with the extracted data
+         query = Enrollment(fullName=username,email=email,gender=gender,phonenumber=mobile,DOB=date_of_birth,
+                           select_mebership_plan=membership,select_trainer=trainer,reference=reference,
+                           address=address)
+         # Save the enrollment data
+         query.save()
+         # Display success message
+         messages.success(request, message="You have Enrolled Successfully ")
+         # Redirect back to the enroll page to reset the form
+         return redirect("enroll")
+      # Render the enroll page with context data
+   return render(request=request, template_name="enroll.html",context=context)
+

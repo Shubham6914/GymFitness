@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Contact Us
+{% endblock title %}
+
+{% block head  %}
+<h1> Contact Us </h1>
+<div class="container mt-2">
+   <div class="row">
+      <div class="col-md-3"> </div>
+      <div class="col-md-6">
+         {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+               <strong></strong>{{message}}
+               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+         {% endfor %}
+         <form action="{% url "contact" %}" method="POST"> {% csrf_token %}
+            <div class="form-group">
+              <input type="text" class="form-control" name="full_name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+               <input type="email" class="form-control mt-2" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+               <input type="phone" class="form-control mt-2" name="phonenumber" placeholder="Enter your Phone Number" required>
+            </div>
+            <div class="form-group">
+               <label for="desc" class="text-warning"> How can i help you?</label>
+               <textarea class="form-control mt-2" name="desc" cols="5" row="3" id="desc" placeholder="Write Your Message Here" required></textarea>
+            </div>
+            <br>
+            <div class="d-grid gap-2">
+               <button type="submit" class="btn btn-warning">Submit</button>
+            </div>
+         </form>
+      </div>
+      <div class="col-md-3"></div>
+   </div>
+</div>
+{% endblock head  %}  
